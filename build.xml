@@ -1,34 +1,49 @@
-<project name="FNDetector" basedir="." default="main">
+<project name="FakeNewsDetector" basedir="." default="main">
 
-    <property name="src.dir"     value="src"/>
-    <property name="build.dir"   value="build"/>
-    <property name="classes.dir" value="${build.dir}/classes"/>
-    <property name="jar.dir"     value="${build.dir}/jar"/>
-    <property name="main-class"  value="br.ufrn.imd.FNDetector.model.News.java"/>
+  <property name="src.dir" value="src" />
+  <property name="build.dir" value="build" />
+  <property name="classes.dir" value="${build.dir}/classes" />
+  <property name="jar.dir" value="${build.dir}/jar" />
+  <property name="lib.dir" value="lib" />
+  <property name="main-class"
+  value="br.ufrn.imd.FakeNewsDetector.view.MainScreen" />
 
+  <path id="commons.classpath">
+    <pathelement
+    location="${lib.dir}/commons-crypto-1.1.0/*.jar" />
+  </path>
 
-    <target name="c">
-        <delete dir="${build.dir}"/>
-    </target>
+  <target name="c">
+    <delete dir="${build.dir}" />
+  </target>
 
-    <target name="compile">
-        <mkdir dir="${classes.dir}"/>
-        <javac includeantruntime="false" srcdir="${src.dir}" destdir="${classes.dir}"/>
-    </target>
+  <target name="compile">
+    <mkdir dir="${classes.dir}" />
 
-    <target name="jar" depends="compile">
-        <mkdir dir="${jar.dir}"/>
-        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
-            <manifest>
-                <attribute name="Main-Class" value="${main-class}"/>
-            </manifest>
-        </jar>
-    </target>
+    <javac includeantruntime="false" srcdir="${src.dir}"
+    destdir="${classes.dir}">
+    <classpath>
+      <fileset dir="${lib.dir}">
+        <include name="**/*.jar" />
+      </fileset>
+    </classpath>
+  </javac>
+</target>
 
-    <target name="r" depends="jar">
-        <java jar="${jar.dir}/${ant.project.name}.jar" fork="true"/>
-    </target>
+<target name="jar" depends="compile">
+  <mkdir dir="${jar.dir}" />
+  <jar destfile="${jar.dir}/${ant.project.name}.jar"
+  basedir="${classes.dir}">
+  <manifest>
+    <attribute name="Main-Class" value="${main-class}" />
+  </manifest>
+</jar>
+  </target>
 
-    <target name="main" depends="jar"/>
+  <target name="r" depends="jar">
+    <java jar="${jar.dir}/${ant.project.name}.jar" fork="true" />
+  </target>
+
+  <target name="main" depends="jar" />
 
 </project>
