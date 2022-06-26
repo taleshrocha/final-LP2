@@ -1,0 +1,5 @@
+br/ufrn/imd/FakeNewsDetector/view/AddNewsCsvFile.class
+br/ufrn/imd/FakeNewsDetector/view/MainScreen.class
+br/ufrn/imd/FakeNewsDetector/model/FakeNews.class
+br/ufrn/imd/FakeNewsDetector/model/ToString.class
+br/ufrn/imd/FakeNewsDetector/model/News.class
