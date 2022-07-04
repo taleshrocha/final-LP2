@@ -1,8 +1,16 @@
 package br.ufrn.imd.FakeNewsDetector.view;
 
+import br.ufrn.imd.FakeNewsDetector.model.*;
+import br.ufrn.imd.FakeNewsDetector.control.*;
+
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.util.List;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
 
 import java.awt.Container;
 import java.awt.Font;
@@ -22,6 +30,8 @@ import javax.swing.filechooser.FileSystemView;
 public class AddNewsCsvFile extends JInternalFrame implements ActionListener {
 
   private static final long serialVersionUID = 1L;
+
+  private DataBase dataBase;
 
   JLabel filePathLabel = new JLabel("CSV file path: ");
 
@@ -58,6 +68,8 @@ public class AddNewsCsvFile extends JInternalFrame implements ActionListener {
     JFileChooser fileChooser = new JFileChooser(
         FileSystemView.getFileSystemView().getHomeDirectory());
 
+    dataBase = DataBase.getInstance();
+
     int returnValue = fileChooser.showOpenDialog(null);
 
     if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -66,27 +78,41 @@ public class AddNewsCsvFile extends JInternalFrame implements ActionListener {
       String csvFilePath = selectedFile.getAbsolutePath();
 
       try {
-        Scanner scanner = new Scanner(new File(csvFilePath));
-        scanner.useDelimiter(",");
-        while (scanner.hasNext()) {
-          System.out.print(scanner.next());
+        FileReader filereader = new FileReader(csvFilePath);
+        CSVParser parser = new CSVParserBuilder().withSeparator(',').build();
+
+        CSVReader csvReader = new CSVReaderBuilder(filereader)
+          .withCSVParser(parser)
+          .build();
+
+        List<String[]> allData = csvReader.readAll();
+
+        FakeNews fakeNews = new FakeNews();
+
+        for (String[] row : allData) {
+          if (row[0] != "") {
+            fakeNews.setId(Integer.parseInt(row[0]));
+            fakeNews.setContent(row[1]);
+            fakeNews.setProcessedContent(fakeNews.processContent(row[1]));
+            fakeNews.setTimeStamp(row[2]);
+            dataBase.addFakeNews(fakeNews);
+          }
         }
       }
-      catch (FileNotFoundException fnfe) {
-        //LOG.error("Optional file " + fileName + " was not found.", fnfe);
-        System.out.println("Optional file " + csvFilePath + " was not found.");
+      catch (Exception e) {
+        e.printStackTrace();
       }
     }
   }
 
-  @Override
-  public void actionPerformed(ActionEvent e) {
-    if(e.getSource() == addButton) {
-    }
-    if(e.getSource() == cleanButton) {
-      filePathText.setText("");
-    }
+@Override
+public void actionPerformed(ActionEvent e) {
+  if(e.getSource() == addButton) {
   }
+  if(e.getSource() == cleanButton) {
+    filePathText.setText("");
+  }
+}
 
 
 }

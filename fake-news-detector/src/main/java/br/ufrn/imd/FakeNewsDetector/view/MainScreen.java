@@ -77,7 +77,7 @@ public class MainScreen extends JFrame implements ActionListener {
     if (e.getSource() == csvFileItem){
       AddNewsCsvFile addNewsCsvFile = new AddNewsCsvFile("Add CSV file");
       desktopPane.add(addNewsCsvFile);
-      addNewsCsvFile.setVisible(true);
+      //addNewsCsvFile.setVisible(true);
     }
     if (e.getSource() == quitItem) {
       System.exit(0);
