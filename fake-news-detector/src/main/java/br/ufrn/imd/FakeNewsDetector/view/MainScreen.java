@@ -14,8 +14,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JLabel;
 import javax.swing.UIManager;
+import javax.swing.JSplitPane;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+
 
 public class MainScreen extends JFrame implements ActionListener {
   private static final long serialVersionUID = 1L;
@@ -32,6 +34,16 @@ public class MainScreen extends JFrame implements ActionListener {
 
   JMenuItem aboutItem = new JMenuItem("About", 65);
   JMenuItem quitItem = new JMenuItem("Quit", 81);
+
+  //Create a split pane with the two scroll panes in it.
+  JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, listScrollPane, pictureScrollPane);
+  //splitPane.setOneTouchExpandable(true);
+  //splitPane.setDividerLocation(150);
+
+  ////Provide minimum sizes for the two components in the split pane
+  //Dimension minimumSize = new Dimension(100, 50);
+  //listScrollPane.setMinimumSize(minimumSize);
+  //pictureScrollPane.setMinimumSize(minimumSize);
 
   public MainScreen() {
     setTitle("Fake News Detector");
@@ -69,11 +81,11 @@ public class MainScreen extends JFrame implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
 
-    //if (e.getSource() == scrapedItem){
-    //  //TelaCliente tlCliente = new TelaCliente("Clientes");
-    //  //desktopPane.add(tlCliente);
-    //  //tlCliente.setVisible(true);
-    //}
+    if (e.getSource() == scrapedItem){
+      AddNewsScraped addNewsScraped = new AddNewsScraped("Add scraped news");
+      desktopPane.add(addNewsScraped);
+      addNewsScraped.setVisible(true);
+    }
     if (e.getSource() == csvFileItem){
       AddNewsCsvFile addNewsCsvFile = new AddNewsCsvFile("Add CSV file");
       desktopPane.add(addNewsCsvFile);

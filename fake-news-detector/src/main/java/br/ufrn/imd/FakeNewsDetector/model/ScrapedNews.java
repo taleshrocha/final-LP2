@@ -1,18 +1,25 @@
 package br.ufrn.imd.FakeNewsDetector.model;
 
-public class ScrapedNews extends News implements ToString {
-  private String processedContent;
+public class ScrapedNews extends FakeNews implements ToString {
   private double trustRating;
 
-  public void setProcessedContent(String processedContent) {
-    this.processedContent = processedContent;
+  public void setTrustRating(double trustRating) {
+    this.trustRating = trustRating;
   }
 
-  public String getProcessedContent() {
-    return processedContent;
+  public double getTrustRating() {
+    return trustRating;
   }
 
   public String toString() {
-    return "";
+    String str = 
+      "\n--------------------------------------------------\n"
+      + "Id:" + this.getId() + "\n"
+      + "Time Stamp:" + this.getTimeStamp() + "\n"
+      + "Content:\n" + this.getContent() + "\n"
+      + "Processed Content:\n" + this.getProcessedContent() + "\n"
+      //+ "Trust Rating" + this.getTrustRating() + "\n"
+      + "\n--------------------------------------------------\n";
+    return str;
   }
 }

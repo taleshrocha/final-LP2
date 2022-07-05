@@ -10,7 +10,8 @@ public class FakeNews extends News implements ToString {
     content = Normalizer.normalize(content, Normalizer.Form.NFD);
     content = content.replaceAll("[^\\x00-\\x7F]", "");
     content = content.replaceAll("\\b\\w{1,3}\\b\\s?", "");
-    content = content.replaceAll("\\.+|\\!+|\\,+|\\;+|\\?+", "");
+    //content = content.replaceAll("\\.+|\\!+|\\,+|\\;+|\\?+|\\(+|\\)+|\\-+", "");
+    content = content.replaceAll("[^a-zA-Z0-9\\s]", "");
     content = content.toLowerCase();
 
     String aux;
@@ -19,6 +20,7 @@ public class FakeNews extends News implements ToString {
     Collections.sort(words);
     content = "";
 
+    // Remove repeated strings
     while (!words.isEmpty()) {
       if (content == "")
         content += words.get(0);
@@ -36,8 +38,8 @@ public class FakeNews extends News implements ToString {
     return content;
   }
 
-  public void setProcessedContent(String processedContent) {
-    this.processedContent = processedContent;
+  public void setProcessedContent(String content) {
+    this.processedContent = processContent(content);
   }
 
   public String getProcessedContent() {
@@ -45,9 +47,14 @@ public class FakeNews extends News implements ToString {
   }
 
   public String toString() {
-    String str = "Id:\t" + this.getId() + "\n" 
-      + "Content:\t" + this.getContent() + "\n"
-      + "Time Stamp:\t" + this.getTimeStamp();
+    String str = 
+      "\n--------------------------------------------------\n"
+      + "Id:" + this.getId() + "\n"
+      + "Time Stamp: " + this.getTimeStamp() + "\n"
+      + "Link: " + this.getLink() + "\n"
+      + "Content:\n" + this.getContent() + "\n"
+      + "Processed Content:\n" + this.getProcessedContent() + "\n"
+      + "\n--------------------------------------------------\n";
     return str;
   }
 }

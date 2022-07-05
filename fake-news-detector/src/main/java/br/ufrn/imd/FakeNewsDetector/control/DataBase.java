@@ -7,22 +7,35 @@ import java.util.ArrayList;
 
 public class DataBase {
   private FakeNewsDAO fakeNewsDAO;
-  //private ScrapedNewsDAO fakeNews;
+  private ScrapedNewsDAO scrapedNewsDAO;
   private static DataBase dataBase ;
 
   private DataBase() {
     fakeNewsDAO = FakeNewsDAO.getInstance();
+    scrapedNewsDAO = ScrapedNewsDAO.getInstance();
   }
 
   public static DataBase getInstance() {
-    if(dataBase == null) {
+    if(dataBase == null)
       dataBase = new DataBase();
-    }
+
     return dataBase;
   }
 
   public void addFakeNews(FakeNews fakeNews) {
     fakeNewsDAO.add(fakeNews);
+  }
+
+  public void addScrapedNews(ScrapedNews scrapedNews) {
+    scrapedNewsDAO.add(scrapedNews);
+  }
+
+  //public void printFakeNews() {
+  //  fakeNewsDAO.print();
+  //}
+
+  public FakeNewsDAO getFakeNews() {
+    return fakeNewsDAO;
   }
 
 }

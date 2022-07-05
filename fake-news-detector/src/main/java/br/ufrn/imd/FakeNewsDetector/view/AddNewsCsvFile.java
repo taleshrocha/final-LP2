@@ -87,16 +87,18 @@ public class AddNewsCsvFile extends JInternalFrame implements ActionListener {
 
         List<String[]> allData = csvReader.readAll();
 
-        FakeNews fakeNews = new FakeNews();
 
         for (String[] row : allData) {
           if (row[0] != "") {
+            FakeNews fakeNews = new FakeNews();
             fakeNews.setId(Integer.parseInt(row[0]));
             fakeNews.setContent(row[1]);
             fakeNews.setProcessedContent(fakeNews.processContent(row[1]));
-            fakeNews.setTimeStamp(row[2]);
+            fakeNews.setLink(row[2]);
+            fakeNews.setTimeStamp(row[3]);
             dataBase.addFakeNews(fakeNews);
           }
+          //System.out.println(fakeNews);
         }
       }
       catch (Exception e) {

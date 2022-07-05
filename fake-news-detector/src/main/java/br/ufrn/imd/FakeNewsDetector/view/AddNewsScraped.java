@@ -1,128 +1,114 @@
-//package br.ufrn.imd.FakeNewsDetector.view;
-//
-//import java.awt.Container;
-//import java.awt.Font;
-//import java.awt.event.ActionEvent;
-//import java.awt.event.ActionListener;
-//import java.text.ParseException;
-//import java.text.SimpleDateFormat;
-//
-//import javax.swing.JButton;
-//import javax.swing.JFormattedTextField;
-//import javax.swing.JInternalFrame;
-//import javax.swing.JLabel;
-//import javax.swing.JTextField;
-//import javax.swing.text.MaskFormatter;
-//
-////import br.ufrn.imd.FakeNewsDetector.model.Fa;
-//
-//public class TelaCliente extends JInternalFrame implements ActionListener {
-//
-//  private static final long serialVersionUID = 1L;
-//  int cod = 0;
-//
-//  private Banco bc;
-//
-//  // Format as datas
-//  SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-//
-//  // rótulos
-//  JLabel lnome   = new JLabel("Nome......:");
-//  JLabel ldtNasc = new JLabel("Data Nasc.:");
-//  JLabel lcpf    = new JLabel("CPF.......:");
-//
-//  private Font f = new Font("Courier", Font.PLAIN, 12);
-//
-//  // campos
-//  JTextField tnome   = new JTextField();
-//  //JTextField tdtnasc = new JTextField();
-//  JTextField tcpf    = new JTextField();
-//  JFormattedTextField tdtnasc = new JFormattedTextField(Mascara("##/##/####"));
-//
-//  // botões
-//  JButton btSubmeter = new JButton("Submeter");
-//  JButton btLimpar = new JButton("Limpar");
-//
-//  public TelaCliente(String str)  {
-//    super(str,false,true);
-//
-//    Container ct = this.getContentPane();
-//    ct.setLayout(null);
-//
-//    // setando a fonte
-//    lnome.setFont(f);
-//    ldtNasc.setFont(f);
-//    lcpf.setFont(f);
-//
-//    // coordenadas
-//    lnome.setBounds(10,10,100,30);
-//    tnome.setBounds(92,10,280,25);
-//    ldtNasc.setBounds(10,40,100,30);
-//    tdtnasc.setBounds(92,40,65,25);
-//    lcpf.setBounds(10,70,100,30);
-//    tcpf.setBounds(92,70,100,25);
-//
-//    // idem
-//    btSubmeter.setBounds(50,140,100,30);
-//    btLimpar.setBounds(230,140,100,30);
-//
-//    // adicionando componentes
-//    ct.add(lnome);
-//    ct.add(tnome);
-//    ct.add(ldtNasc);
-//    ct.add(tdtnasc);
-//    ct.add(lcpf);
-//    ct.add(tcpf);
-//    ct.add(btSubmeter);
-//    ct.add(btLimpar);
-//
-//    // evento dos botões
-//    btSubmeter.addActionListener(this);		
-//    btLimpar.addActionListener(this);
-//
-//    // especificações do formulário
-//    setSize(390,210);
-//    setTitle(str);
-//
-//    bc = Banco.getInstance();
-//  }
-//
-//  @Override
-//  public void actionPerformed(ActionEvent e) {
-//    if (e.getSource() == btSubmeter){
-//
-//      // buscando último cliente
-//      cod = bc.buscaCodigoCliente();
-//      cod++;
-//
-//      // setar atributos Cliente
-//      Cliente c = new Cliente();
-//      c.setIdCliente(cod);
-//
-//      c.setNomeCliente(tnome.getText());
-//      c.setCpf(tcpf.getText());
-//
-//      // formatar a data do campo de texto
-//      try {
-//        c.setDataNascimento(formato.parse(tdtnasc.getText()));
-//      } catch (ParseException pe) {
-//        pe.printStackTrace();
-//      }
-//
-//      // persistir dados
-//      bc.inserirCliente(c);
-//
-//      tnome.setText("");
-//      tdtnasc.setText("");
-//      tcpf.setText("");
-//
-//      tnome.requestFocus();
-//    }
-//    else if(e.getSource() == btLimpar){
-//      tnome.setText("");
-//      tdtnasc.setText("");
-//      tcpf.setText("");
-//    }
-//  }
-//
-//}
+package br.ufrn.imd.FakeNewsDetector.view;
+
+import br.ufrn.imd.FakeNewsDetector.model.*;
+import br.ufrn.imd.FakeNewsDetector.control.*;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileSystemView;
+import javax.swing.text.*;
+
+
+public class AddNewsScraped extends JInternalFrame implements ActionListener {
+
+  private static final long serialVersionUID = 1L;
+
+  private int id = 0;
+
+  private DataBase dataBase;
+
+  JLabel filePathLabel = new JLabel("Scraped News Text: ");
+
+  JTextField contentText = new JTextField();
+  //contentText.setColumns(20);
+  //contentText.setLineWrap(true);
+  //contentText.setRows(5);
+  //contentText.setWrapStyleWord(true);
+  //contentText.setEditable(false);
+
+  JButton addButton = new JButton("Add");
+  JButton cleanButton = new JButton("Clean");
+
+  public AddNewsScraped(String str)  {
+    super(str,false,true);
+
+    setTitle(str);
+    setSize(400,300);
+
+    Container container = this.getContentPane();
+    container.setLayout(null);
+
+    filePathLabel.setBounds(10,10,100,30);
+    contentText.setBounds(50,50,280,60);
+
+    addButton.setBounds(50,140,100,30);
+    cleanButton.setBounds(230,140,100,30);
+
+    container.add(filePathLabel);
+    container.add(contentText);
+
+    container.add(addButton);
+    container.add(cleanButton);
+
+    addButton.addActionListener(this);
+    cleanButton.addActionListener(this);
+
+
+    JFileChooser fileChooser = new JFileChooser(
+        FileSystemView.getFileSystemView().getHomeDirectory());
+
+    dataBase = DataBase.getInstance();
+  }
+
+@Override
+public void actionPerformed(ActionEvent e) {
+  if(e.getSource() == addButton) {
+    ScrapedNews scrapedNews = new ScrapedNews();
+
+    // TODO: get the last id.
+    // TODO: see if the text is the same as the last one.
+
+    // Get the time stamp. The local time and date.
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    LocalDateTime now = LocalDateTime.now();
+    scrapedNews.setTimeStamp(dtf.format(now));
+
+    scrapedNews.setId(id++);
+    scrapedNews.setContent(contentText.getText());
+    scrapedNews.setProcessedContent(scrapedNews.processContent(contentText.getText()));
+
+    Comparator comparator = new Comparator();
+    scrapedNews.setTrustRating(comparator.eval(scrapedNews));
+
+    dataBase.addScrapedNews(scrapedNews);
+  }
+  if(e.getSource() == cleanButton) {
+    contentText.setText("");
+  }
+}
+
+
+}
