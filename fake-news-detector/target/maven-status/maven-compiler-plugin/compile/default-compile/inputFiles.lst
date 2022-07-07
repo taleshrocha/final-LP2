@@ -1,11 +1,12 @@
-/home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/view/MainScreen.java
-/home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/view/AddNewsScraped.java
 /home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/model/News.java
 /home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/control/DataBase.java
+/home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/view/MainFrame.java
 /home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/model/FakeNews.java
+/home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/view/EvalPanel.java
 /home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/model/Comparator.java
-/home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/view/AddNewsCsvFile.java
 /home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/dao/FakeNewsDAO.java
+/home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/view/HomePanel.java
 /home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/model/ScrapedNews.java
 /home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/model/ToString.java
+/home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/view/AddPanel.java
 /home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/dao/ScrapedNewsDAO.java

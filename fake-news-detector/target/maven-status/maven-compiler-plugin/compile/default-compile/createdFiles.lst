@@ -1,0 +1,11 @@
+br/ufrn/imd/FakeNewsDetector/model/ToString.class
+br/ufrn/imd/FakeNewsDetector/view/HomePanel.class
+br/ufrn/imd/FakeNewsDetector/model/News.class
+br/ufrn/imd/FakeNewsDetector/model/FakeNews.class
+br/ufrn/imd/FakeNewsDetector/view/EvalPanel.class
+br/ufrn/imd/FakeNewsDetector/view/MainFrame.class
+br/ufrn/imd/FakeNewsDetector/dao/ScrapedNewsDAO.class
+br/ufrn/imd/FakeNewsDetector/control/DataBase.class
+br/ufrn/imd/FakeNewsDetector/dao/FakeNewsDAO.class
+br/ufrn/imd/FakeNewsDetector/model/ScrapedNews.class
+br/ufrn/imd/FakeNewsDetector/model/Comparator.class

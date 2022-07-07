@@ -43,7 +43,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>br.ufrn.imd.FakeNewsDetector.view.MainScreen</mainClass>
+              <mainClass>br.ufrn.imd.FakeNewsDetector.view.MainFrame</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>
