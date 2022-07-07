@@ -22,9 +22,8 @@ public class FakeNewsDAO {
 
   // TODO
   public boolean add(FakeNews fakeNews) {
+    System.out.println("\t----- FakeNewsDAO -----\t");
     System.out.println(fakeNews);
-
-    //System.out.println(fakeNews.getProcessedContent().hashCode());
     allFakeNews.put(fakeNews.getId(), fakeNews);
     return true;
   }

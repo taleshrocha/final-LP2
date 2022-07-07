@@ -21,6 +21,8 @@ public class ScrapedNewsDAO {
 
   // TODO
   public boolean add(ScrapedNews scrapedNews) {
+    System.out.println("\t----- ScrapedNewsDAO -----\t");
+    System.out.println(scrapedNews);
     allScrapedNews.put(scrapedNews.getId(), scrapedNews);
     return true;
   }

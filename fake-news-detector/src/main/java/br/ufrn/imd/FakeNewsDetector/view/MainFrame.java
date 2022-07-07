@@ -12,19 +12,18 @@ public class MainFrame extends JFrame implements ActionListener {
   private static final long serialVersionUID = 1L;
 
   private BorderLayout borderLayout;
-  private GridBagLayout gridBagLayout;
   private GridLayout gridLayout;
   private CardLayout cardLayout;
 
   private JPanel leftBar;
   private JPanel content;
-  private JTable table;
-  private JScrollPane scrollPane;
+
   private JButton homeButton;
   private JButton addButton;
   private JButton evalButton;
 
   private HomePanel homePanel;
+  private AddPanel addPanel;
   private EvalPanel evalPanel;
 
   public MainFrame() {
@@ -36,26 +35,15 @@ public class MainFrame extends JFrame implements ActionListener {
     gridLayout = new GridLayout(3, 1, 5, 5);
     cardLayout = new CardLayout();
 
-    String data[][]={ {"101","Amit","670000"},    
-                          {"102","Jai","780000"},    
-                          {"101","Sachin","700000"}};    
-    String column[]={"ID","NAME","SALARY"};       
-    table = new JTable(data, column);
-
-    scrollPane = new JScrollPane(table);
-
-    scrollPane.setVerticalScrollBarPolicy(
-        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);  
-
     leftBar = new JPanel();
     content = new JPanel();
 
     homePanel = new HomePanel();
+    addPanel = new AddPanel();
     evalPanel = new EvalPanel();
 
-    // Setting up the buttons.
-    Image image;
-    Image newImage;
+    // Setting up the buttons icons.
+    Image image, newImage;
 
     ImageIcon homeIcon = new ImageIcon("/home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/images/home.png");
     image = homeIcon.getImage();
@@ -72,6 +60,7 @@ public class MainFrame extends JFrame implements ActionListener {
     newImage = image.getScaledInstance(100, 100,  java.awt.Image.SCALE_SMOOTH);
     evalIcon = new ImageIcon(newImage);
 
+    // Setting up the buttons.
     homeButton = new JButton(homeIcon);
     addButton = new JButton(addIcon);
     evalButton = new JButton(evalIcon);
@@ -91,6 +80,7 @@ public class MainFrame extends JFrame implements ActionListener {
     leftBar.add(evalButton);
 
     content.add(homePanel, "homePanel");
+    content.add(addPanel, "addPanel");
     content.add(evalPanel, "evalPanel");
 
     // Action listeners.
@@ -103,6 +93,9 @@ public class MainFrame extends JFrame implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == homeButton) {
       cardLayout.show(content, "homePanel");
+    }
+    if (e.getSource() == addButton) {
+      cardLayout.show(content, "addPanel");
     }
     if (e.getSource() == evalButton) {
       cardLayout.show(content, "evalPanel");
