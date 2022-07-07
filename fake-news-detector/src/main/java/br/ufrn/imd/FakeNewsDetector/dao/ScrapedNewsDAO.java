@@ -2,6 +2,7 @@ package br.ufrn.imd.FakeNewsDetector.dao;
 import br.ufrn.imd.FakeNewsDetector.model.*;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class ScrapedNewsDAO {
 
@@ -25,5 +26,17 @@ public class ScrapedNewsDAO {
     System.out.println(scrapedNews);
     allScrapedNews.put(scrapedNews.getId(), scrapedNews);
     return true;
+  }
+
+  public Set<Integer> keySet() {
+    return allScrapedNews.keySet();
+  }
+
+  public ScrapedNews get(Integer key) {
+    return allScrapedNews.get(key);
+  }
+
+  public int size() {
+    return allScrapedNews.size();
   }
 }

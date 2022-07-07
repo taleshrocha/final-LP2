@@ -10,7 +10,6 @@ import br.ufrn.imd.FakeNewsDetector.model.*;
 
 public class EvalPanel extends JPanel implements ActionListener, ChangeListener {
   BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
-  GridLayout gridLayout = new GridLayout(3, 1, 5, 5);
 
   Comparator comparator = new Comparator();
   JSlider trustRatingSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 25);
@@ -19,7 +18,7 @@ public class EvalPanel extends JPanel implements ActionListener, ChangeListener 
   JLabel fakeNewsLabel = new JLabel("Fake News:");
   JLabel nonFakeNewsLabel = new JLabel("Non Fake News:");
 
-  JPanel fakeNewsPanel = new JPanel();
+  NewsPanel fakeNewsPanel = new NewsPanel();
 
   public EvalPanel() {
     trustRatingSlider.setMinorTickSpacing(1);
@@ -32,7 +31,9 @@ public class EvalPanel extends JPanel implements ActionListener, ChangeListener 
 
     add(trustRatingSlider);
     add(fakeNewsLabel);
+    add(fakeNewsPanel);
     add(nonFakeNewsLabel);
+    //add(nonFakeNewsPanel);
     add(blah);
 
     trustRatingSlider.addChangeListener(this);

@@ -30,12 +30,11 @@ public class DataBase {
     scrapedNewsDAO.add(scrapedNews);
   }
 
-  //public void printFakeNews() {
-  //  fakeNewsDAO.print();
-  //}
-
   public FakeNewsDAO getFakeNews() {
     return fakeNewsDAO;
+  }
+  public ScrapedNewsDAO getScrapedNews() {
+    return scrapedNewsDAO;
   }
 
 }
