@@ -1,40 +1,65 @@
+// TODO upload scrapad news trustrate when new csvs are added
 package br.ufrn.imd.FakeNewsDetector.view;
 
+import br.ufrn.imd.FakeNewsDetector.control.*;
+import br.ufrn.imd.FakeNewsDetector.dao.*;
+import br.ufrn.imd.FakeNewsDetector.model.*;
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.table.*;
 
-import br.ufrn.imd.FakeNewsDetector.model.*;
+public class EvalPanel extends JPanel implements ChangeListener {
 
-public class EvalPanel extends JPanel implements ActionListener, ChangeListener {
-  BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+  private DataBase dataBase;
+  private ScrapedNewsDAO allScrapedNews;
 
   Comparator comparator = new Comparator();
+  String row[] = {"id", "hoax", "link", "timestamp", "trustrate"};
+  String column[] = {"id", "hoax", "link", "timestamp", "trustrate"};
+
+  // Layouts.
+  GroupLayout groupLayout = new GroupLayout(this);
+
+  // Misc.
   JSlider trustRatingSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 25);
+  JTable table = new JTable();
+  JScrollPane scrollPane = new JScrollPane(table);
+  DefaultTableModel model = new DefaultTableModel(column, 0);
 
+  // Labels.
   JLabel blah = new JLabel(String.valueOf(trustRatingSlider.getValue()));
-  JLabel fakeNewsLabel = new JLabel("Fake News:");
-  JLabel nonFakeNewsLabel = new JLabel("Non Fake News:");
-
-  NewsPanel fakeNewsPanel = new NewsPanel();
 
   public EvalPanel() {
+    dataBase = DataBase.getInstance();
+    allScrapedNews = dataBase.getScrapedNews();
+
+    // Setting up the layout.
+    setLayout(groupLayout);
+    groupLayout.setAutoCreateGaps(true);
+    groupLayout.setAutoCreateContainerGaps(true);
+
+    // Setting up the table.
+    table = new JTable(model);
+    scrollPane.getViewport().add(table);
+
+    // Setting up the slider.
     trustRatingSlider.setMinorTickSpacing(1);
     trustRatingSlider.setMajorTickSpacing(10);
     trustRatingSlider.setPaintTicks(true);
     trustRatingSlider.setPaintLabels(true);
 
-    // Setting layout;
-    setLayout(boxLayout);
+    // Adding components.
+    groupLayout.setHorizontalGroup(
+        groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        .addComponent(trustRatingSlider)
+        .addComponent(table));
 
-    add(trustRatingSlider);
-    add(fakeNewsLabel);
-    add(fakeNewsPanel);
-    add(nonFakeNewsLabel);
-    //add(nonFakeNewsPanel);
-    add(blah);
+    groupLayout.setVerticalGroup(
+        groupLayout.createSequentialGroup()
+        .addComponent(trustRatingSlider)
+        .addComponent(table));
 
     trustRatingSlider.addChangeListener(this);
   }
@@ -44,13 +69,21 @@ public class EvalPanel extends JPanel implements ActionListener, ChangeListener 
     JSlider source = (JSlider)e.getSource();
     if (!source.getValueIsAdjusting()) {
       blah.setText(String.valueOf(trustRatingSlider.getValue()));
+      model.setRowCount(0);
+
+      for (Integer key : allScrapedNews.keySet()) {
+        if (allScrapedNews.get(key).getTrustRating() >= trustRatingSlider.getValue()) {
+          row[0] = String.valueOf(allScrapedNews.get(key).getId());
+          row[1] = allScrapedNews.get(key).getContent();
+          row[2] = allScrapedNews.get(key).getLink();
+          row[3] = allScrapedNews.get(key).getTimeStamp();
+          row[4] = String.valueOf(allScrapedNews.get(key).getTrustRating());
+          model.addRow(row);
+        }
+      }
+
+      table = new JTable(model);
+      scrollPane.getViewport().add(table);
     }
   }
-
-  @Override
-  public void actionPerformed(ActionEvent e) {
-    //if (e.getSource() == addButton) {
-    //}
-  }
-
 }

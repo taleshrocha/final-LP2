@@ -2,7 +2,6 @@ package br.ufrn.imd.FakeNewsDetector.view;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 
 public class HomePanel extends JPanel implements ActionListener {
@@ -19,9 +18,9 @@ public class HomePanel extends JPanel implements ActionListener {
     add(helloMsg);
   }
 
-@Override
-public void actionPerformed(ActionEvent e) {
-  //if(e.getSource() == addButton) {
-  //}
-}
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    // if(e.getSource() == addButton) {
+    // }
+  }
 }

@@ -1,10 +1,11 @@
 package br.ufrn.imd.FakeNewsDetector.model;
 
-import br.ufrn.imd.FakeNewsDetector.model.*;
-import br.ufrn.imd.FakeNewsDetector.dao.*;
 import br.ufrn.imd.FakeNewsDetector.control.DataBase;
-
-import org.apache.commons.text.similarity.CosineDistance;
+import br.ufrn.imd.FakeNewsDetector.dao.*;
+import br.ufrn.imd.FakeNewsDetector.model.*;
+// import Java.lang.math.max;
+import java.lang.Math;
+import org.apache.commons.text.similarity.*;
 
 public class Comparator {
 
@@ -12,16 +13,32 @@ public class Comparator {
     DataBase dataBase = DataBase.getInstance();
     FakeNewsDAO allFakeNews = dataBase.getFakeNews();
 
-    double result = 0.0;
+    double resultCosine = 0.0;
+    double resultLeven = 0.0;
+    double resultJaro = 0.0;
+    String scraped;
+    String fake;
+
     CosineDistance cosineDistance = new CosineDistance();
+    LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
+    JaroWinklerDistance jaroWinklerDistance = new JaroWinklerDistance();
 
-    for (Integer key: allFakeNews.keySet()) {
-      result += cosineDistance.apply(scrapedNews.getProcessedContent(), allFakeNews
-          .get(key)
-          .getProcessedContent());
+    for (Integer key : allFakeNews.keySet()) {
+      scraped = scrapedNews.getProcessedContent();
+      fake = allFakeNews.get(key).getProcessedContent();
+
+      resultCosine += cosineDistance.apply(scraped, fake);
+
+      resultLeven += (double)(1.0 - levenshteinDistance.apply(scraped, fake) /
+        Math.max(scraped.length(), fake.length()));
+
+      resultJaro += 1.0 - jaroWinklerDistance.apply(scraped, fake);
     }
-    result = result/allFakeNews.size();
 
-    return result;
+    resultCosine = (double)resultCosine / allFakeNews.size();
+    resultLeven = (double)resultLeven / allFakeNews.size();
+    resultJaro = (double)resultJaro / allFakeNews.size();
+
+    return (double)(resultJaro+resultLeven+resultCosine)/3;
   }
 }

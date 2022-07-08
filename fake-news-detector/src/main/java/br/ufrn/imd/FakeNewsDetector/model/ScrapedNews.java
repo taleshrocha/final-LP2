@@ -4,7 +4,7 @@ public class ScrapedNews extends FakeNews implements ToString {
   private double trustRating;
 
   public void setTrustRating(double trustRating) {
-    this.trustRating = trustRating;
+    this.trustRating = (trustRating)*100;
   }
 
   public double getTrustRating() {

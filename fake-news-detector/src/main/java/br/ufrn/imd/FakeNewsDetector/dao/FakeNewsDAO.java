@@ -21,11 +21,10 @@ public class FakeNewsDAO {
   }
 
   // TODO
-  public boolean add(FakeNews fakeNews) {
+  public void add(FakeNews fakeNews) {
     System.out.println("\t----- FakeNewsDAO -----\t");
     System.out.println(fakeNews);
-    allFakeNews.put(fakeNews.getId(), fakeNews);
-    return true;
+    allFakeNews.put(fakeNews.getProcessedContent().hashCode(), fakeNews);
   }
 
   public Set<Integer> keySet() {

@@ -20,12 +20,10 @@ public class ScrapedNewsDAO {
     return scrapedNews;
   }
 
-  // TODO
-  public boolean add(ScrapedNews scrapedNews) {
+  public void add(ScrapedNews scrapedNews) {
     System.out.println("\t----- ScrapedNewsDAO -----\t");
     System.out.println(scrapedNews);
-    allScrapedNews.put(scrapedNews.getId(), scrapedNews);
-    return true;
+    allScrapedNews.put(scrapedNews.getProcessedContent().hashCode(), scrapedNews);
   }
 
   public Set<Integer> keySet() {

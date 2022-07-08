@@ -1,118 +1,121 @@
 package br.ufrn.imd.FakeNewsDetector.view;
 
-import br.ufrn.imd.FakeNewsDetector.model.*;
 import br.ufrn.imd.FakeNewsDetector.control.*;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileNotFoundException;
-import java.util.List;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
+import br.ufrn.imd.FakeNewsDetector.model.*;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
-import java.time.format.DateTimeFormatter;
-import java.time.LocalDateTime;
-
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import java.awt.*;
 import java.awt.event.*;
-
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.filechooser.*;
 import javax.swing.table.*;
 
 public class AddPanel extends JPanel implements ActionListener {
 
-  private DataBase dataBase;
-  private int id = 0;
+  DataBase dataBase;
 
-  GridBagLayout gridBagLayout = new GridBagLayout();
-  GridBagConstraints gridBagConstraints = new GridBagConstraints();
+  int id = 0;
   String csvFilePath = "";
   List<String[]> allData;
+  FakeNews fakeNews;
+  Comparator comparator = new Comparator();
 
+  // Layouts.
+  GroupLayout groupLayout = new GroupLayout(this);
+
+  // Labels.
   JLabel fileLabel = new JLabel("File:");
   JLabel filePathLabel = new JLabel("          ");
+  JLabel scrapedNewsLabel = new JLabel("Scraped News Text: ");
+  JLabel csvFileLabel = new JLabel("CSV file: ");
+
+  // Buttons.
   JButton addCsvButton = new JButton("Add");
   JButton browseButton = new JButton("Browse");
-
-  JTable table = new JTable();
-
-  JScrollPane scrollPane = new JScrollPane(table);
-
-  JLabel fakeNewsLabel = new JLabel("Scraped News Text: ");
-
-  JTextField contentText = new JTextField();
-
   JButton addScrapedNewsButton = new JButton("Add");
   JButton cleanButton = new JButton("Clean");
 
+  // Misc.
+  JTable table = new JTable();
+  JScrollPane tableScrollPane = new JScrollPane(table);
+  JScrollPane scrapedScrollPane;
+  JTextArea scrapedTextArea = new JTextArea();
+
   public AddPanel() {
-    scrollPane.setVerticalScrollBarPolicy(
+    dataBase = DataBase.getInstance();
+
+    // Setting up the scrapedTextArea area to break the lines.
+    scrapedTextArea.setLineWrap(true);
+    scrapedTextArea.setWrapStyleWord(true);
+
+    // Creating a scroll pane to the text area.
+    scrapedScrollPane = new JScrollPane(scrapedTextArea);
+
+    // Setting up the scroll panes.
+    tableScrollPane.setVerticalScrollBarPolicy(
+        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    scrapedScrollPane.setVerticalScrollBarPolicy(
         JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-    setLayout(gridBagLayout);
+    // Setting up the layout.
+    setLayout(groupLayout);
+    groupLayout.setAutoCreateGaps(true);
+    groupLayout.setAutoCreateContainerGaps(true);
 
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    add(fakeNewsLabel, gridBagConstraints);
+    // Adding components.
+    groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+          .addComponent(scrapedNewsLabel)
+          .addComponent(scrapedScrollPane)
+          .addGroup(groupLayout.createSequentialGroup()
+            .addComponent(addScrapedNewsButton)
+            .addComponent(cleanButton))
+          .addComponent(csvFileLabel)
+          .addComponent(tableScrollPane)
+          .addGroup(groupLayout.createSequentialGroup()
+            .addComponent(browseButton)
+            .addComponent(addCsvButton)));
 
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.gridwidth = 100;
-    gridBagConstraints.ipady = 100;
-    add(contentText, gridBagConstraints);
+    groupLayout.setVerticalGroup(
+        groupLayout.createSequentialGroup()
+        .addComponent(scrapedNewsLabel)
+        .addComponent(scrapedScrollPane)
+        .addGroup(
+          groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+          .addComponent(addScrapedNewsButton)
+          .addComponent(cleanButton))
+        .addComponent(csvFileLabel)
+        .addComponent(tableScrollPane)
+        .addGroup(
+          groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+          .addComponent(browseButton)
+          .addComponent(addCsvButton)));
 
-    gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.ipady = 10;
-    gridBagConstraints.gridwidth = 1;
-    add(addScrapedNewsButton, gridBagConstraints);
-
-    gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = 2;
-    add(cleanButton, gridBagConstraints);
-
-    gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;  
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 3;
-    add(fileLabel, gridBagConstraints);
-
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 3;
-    add(filePathLabel, gridBagConstraints);
-
-    gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = 3;
-    add(browseButton, gridBagConstraints);
-
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 4;
-    add(scrollPane, gridBagConstraints);
-
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 5;
-    add(addCsvButton, gridBagConstraints);
-
+    // Action listeners.
     addCsvButton.addActionListener(this);
     browseButton.addActionListener(this);
     addScrapedNewsButton.addActionListener(this);
     cleanButton.addActionListener(this);
-
-    dataBase = DataBase.getInstance();
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if(e.getSource() == browseButton) {
+    if (e.getSource() == browseButton) {
+      // Creates and opens the file chooser.
       JFileChooser fileChooser = new JFileChooser(
           FileSystemView.getFileSystemView().getHomeDirectory());
-
       int returnValue = fileChooser.showOpenDialog(null);
 
       if (returnValue == JFileChooser.APPROVE_OPTION) {
+        // Gets the user selected file path.
         File selectedFile = fileChooser.getSelectedFile();
-
         csvFilePath = selectedFile.getAbsolutePath();
 
         filePathLabel.setText(csvFilePath);
@@ -121,41 +124,44 @@ public class AddPanel extends JPanel implements ActionListener {
           FileReader filereader = new FileReader(csvFilePath);
           CSVParser parser = new CSVParserBuilder().withSeparator(',').build();
 
-          CSVReader csvReader = new CSVReaderBuilder(filereader)
-            .withCSVParser(parser)
-            .build();
+          CSVReader csvReader =
+            new CSVReaderBuilder(filereader).withCSVParser(parser).build();
+
+          // Gets all CSV rows in a List<String[]>
           allData = csvReader.readAll();
 
-          String column[]={"id","hoax","link", "timestamp"};
+          String column[] = {"id", "hoax", "link", "timestamp"};
 
           DefaultTableModel model = new DefaultTableModel(column, 0);
 
-          for (String[] row : allData) {
-            model.addRow(row);
-          }
+          // Removes the CSV index line.
+          allData.remove(0);
 
+          for (String[] row : allData)
+            model.addRow(row);
+
+          // Creates the new table with all the CSV info in it.
           table = new JTable(model);
-          scrollPane.getViewport().add(table);
-        }
-        catch (Exception ex) {
+          tableScrollPane.getViewport().add(table);
+        } catch (Exception ex) {
           ex.printStackTrace();
         }
-      }
-      // TODO else?
+      } else // TODO
+        System.out.println("ERROR IN FILE CHOOSER.");
     }
     if (e.getSource() == addCsvButton) {
       try {
         FileReader filereader = new FileReader(csvFilePath);
         CSVParser parser = new CSVParserBuilder().withSeparator(',').build();
 
-        CSVReader csvReader = new CSVReaderBuilder(filereader)
-          .withCSVParser(parser)
-          .build();
+        CSVReader csvReader =
+          new CSVReaderBuilder(filereader).withCSVParser(parser).build();
 
         List<String[]> allData = csvReader.readAll();
 
-        // TODO is printing two times!
-        FakeNews fakeNews;
+        // Removes the CSV index line.
+        allData.remove(0);
+
         for (String[] row : allData) {
           if (row[0] != "") {
             fakeNews = new FakeNews();
@@ -167,8 +173,7 @@ public class AddPanel extends JPanel implements ActionListener {
             dataBase.addFakeNews(fakeNews);
           }
         }
-      }
-      catch (Exception ex) {
+      } catch (Exception ex) {
         ex.printStackTrace();
       }
     }
@@ -179,21 +184,22 @@ public class AddPanel extends JPanel implements ActionListener {
       // TODO: see if the text is the same as the last one.
 
       // Get the time stamp. The local time and date.
-      DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+      DateTimeFormatter dtf =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
       LocalDateTime now = LocalDateTime.now();
       scrapedNews.setTimeStamp(dtf.format(now));
 
       scrapedNews.setId(id++);
-      scrapedNews.setContent(contentText.getText());
-      scrapedNews.setProcessedContent(scrapedNews.processContent(contentText.getText()));
+      scrapedNews.setContent(scrapedTextArea.getText());
+      scrapedNews.setProcessedContent(
+          scrapedNews.processContent(scrapedTextArea.getText()));
 
-      Comparator comparator = new Comparator();
       scrapedNews.setTrustRating(comparator.eval(scrapedNews));
 
       dataBase.addScrapedNews(scrapedNews);
     }
     if (e.getSource() == cleanButton) {
-      contentText.setText("");
+      scrapedTextArea.setText("");
     }
   }
 }
