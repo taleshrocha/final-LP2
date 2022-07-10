@@ -1,6 +1,8 @@
 package br.ufrn.imd.FakeNewsDetector.model;
 
-public abstract class News {
+import java.io.Serializable;
+
+public abstract class News implements Serializable {
   private int id;
   private String content;
   private String link;

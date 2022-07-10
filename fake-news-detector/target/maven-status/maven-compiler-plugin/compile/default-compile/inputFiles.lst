@@ -8,6 +8,8 @@
 /home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/view/AddPanel.java
 /home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/dao/ScrapedNewsDAO.java
 /home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/view/NewsPanel.java
+/home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/view/ErrorFrame.java
 /home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/control/DataBase.java
+/home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/view/TableRowFrame.java
 /home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/model/Comparator.java
 /home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/src/main/java/br/ufrn/imd/FakeNewsDetector/model/ToString.java

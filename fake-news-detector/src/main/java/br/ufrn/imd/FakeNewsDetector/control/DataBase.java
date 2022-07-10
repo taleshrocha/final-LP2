@@ -4,6 +4,7 @@ import br.ufrn.imd.FakeNewsDetector.dao.*;
 import br.ufrn.imd.FakeNewsDetector.model.*;
 
 import java.util.ArrayList;
+import java.io.*;
 
 public class DataBase {
   private FakeNewsDAO fakeNewsDAO;
@@ -33,8 +34,13 @@ public class DataBase {
   public FakeNewsDAO getFakeNews() {
     return fakeNewsDAO;
   }
+
   public ScrapedNewsDAO getScrapedNews() {
     return scrapedNewsDAO;
   }
 
+  public void save() {
+    fakeNewsDAO.save();
+    scrapedNewsDAO.save();
+  }
 }

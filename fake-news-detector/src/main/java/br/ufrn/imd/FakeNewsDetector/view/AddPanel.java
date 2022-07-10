@@ -20,7 +20,7 @@ import javax.swing.table.*;
 
 public class AddPanel extends JPanel implements ActionListener {
 
-  DataBase dataBase;
+  private DataBase dataBase;
 
   int id = 0;
   String csvFilePath = "";
@@ -48,6 +48,7 @@ public class AddPanel extends JPanel implements ActionListener {
   JScrollPane tableScrollPane = new JScrollPane(table);
   JScrollPane scrapedScrollPane;
   JTextArea scrapedTextArea = new JTextArea();
+  ErrorFrame errorFrame;
 
   public AddPanel() {
     dataBase = DataBase.getInstance();
@@ -71,17 +72,18 @@ public class AddPanel extends JPanel implements ActionListener {
     groupLayout.setAutoCreateContainerGaps(true);
 
     // Adding components.
-    groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-          .addComponent(scrapedNewsLabel)
-          .addComponent(scrapedScrollPane)
-          .addGroup(groupLayout.createSequentialGroup()
-            .addComponent(addScrapedNewsButton)
-            .addComponent(cleanButton))
-          .addComponent(csvFileLabel)
-          .addComponent(tableScrollPane)
-          .addGroup(groupLayout.createSequentialGroup()
-            .addComponent(browseButton)
-            .addComponent(addCsvButton)));
+    groupLayout.setHorizontalGroup(
+        groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        .addComponent(scrapedNewsLabel)
+        .addComponent(scrapedScrollPane)
+        .addGroup(groupLayout.createSequentialGroup()
+          .addComponent(addScrapedNewsButton)
+          .addComponent(cleanButton))
+        .addComponent(csvFileLabel)
+        .addComponent(tableScrollPane)
+        .addGroup(groupLayout.createSequentialGroup()
+          .addComponent(browseButton)
+          .addComponent(addCsvButton)));
 
     groupLayout.setVerticalGroup(
         groupLayout.createSequentialGroup()
@@ -146,8 +148,12 @@ public class AddPanel extends JPanel implements ActionListener {
         } catch (Exception ex) {
           ex.printStackTrace();
         }
-      } else // TODO
-        System.out.println("ERROR IN FILE CHOOSER.");
+      } else {
+        errorFrame =
+          new ErrorFrame("No file",
+              "There is no file selected.");
+        errorFrame.setVisible(true);
+      }
     }
     if (e.getSource() == addCsvButton) {
       try {
@@ -173,30 +179,53 @@ public class AddPanel extends JPanel implements ActionListener {
             dataBase.addFakeNews(fakeNews);
           }
         }
+
+        dataBase.save();
       } catch (Exception ex) {
+        errorFrame =
+          new ErrorFrame("Can't find file",
+              "There is no file choosed.");
+        errorFrame.setVisible(true);
         ex.printStackTrace();
       }
     }
     if (e.getSource() == addScrapedNewsButton) {
-      ScrapedNews scrapedNews = new ScrapedNews();
 
-      // TODO: get the last id.
-      // TODO: see if the text is the same as the last one.
+      if (scrapedTextArea.getText().isBlank()) {
+        errorFrame =
+          new ErrorFrame("No text",
+              "There is no text. Try adding some text.");
+        errorFrame.setVisible(true);
+        scrapedTextArea.setText("");
+      }
+      else {
+        ScrapedNews scrapedNews = new ScrapedNews();
 
-      // Get the time stamp. The local time and date.
-      DateTimeFormatter dtf =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-      LocalDateTime now = LocalDateTime.now();
-      scrapedNews.setTimeStamp(dtf.format(now));
+        // TODO: get the last id.
 
-      scrapedNews.setId(id++);
-      scrapedNews.setContent(scrapedTextArea.getText());
-      scrapedNews.setProcessedContent(
-          scrapedNews.processContent(scrapedTextArea.getText()));
+        // Get the time stamp. The local time and date.
+        DateTimeFormatter dtf =
+          DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        scrapedNews.setTimeStamp(dtf.format(now));
 
-      scrapedNews.setTrustRating(comparator.eval(scrapedNews));
+        scrapedNews.setId(id++);
+        scrapedNews.setContent(scrapedTextArea.getText());
+        scrapedNews.setProcessedContent(
+            scrapedNews.processContent(scrapedTextArea.getText()));
 
-      dataBase.addScrapedNews(scrapedNews);
+        try {
+          scrapedNews.setTrustRating(comparator.eval(scrapedNews));
+          dataBase.addScrapedNews(scrapedNews);
+          dataBase.save();
+        } catch (IllegalArgumentException iae) {
+          errorFrame =
+            new ErrorFrame("Invalid Text",
+                "The text you added is invalid. Try a longer text.");
+          errorFrame.setVisible(true);
+          iae.printStackTrace();
+        }
+      }
     }
     if (e.getSource() == cleanButton) {
       scrapedTextArea.setText("");

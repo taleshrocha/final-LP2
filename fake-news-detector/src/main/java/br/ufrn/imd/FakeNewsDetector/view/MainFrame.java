@@ -3,11 +3,20 @@ package br.ufrn.imd.FakeNewsDetector.view;
 import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import javax.swing.*;
 
 public class MainFrame extends JFrame implements ActionListener {
 
   private static final long serialVersionUID = 1L;
+
+  // Data handling.
+  File file;
+  FileOutputStream fos;
+  ObjectOutputStream oos;
 
   // Buttons.
   JButton homeButton;
@@ -33,6 +42,15 @@ public class MainFrame extends JFrame implements ActionListener {
   public MainFrame() {
     setTitle("Fake News Detector");
     setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+    try {
+      file = new File("fake-data.dat");
+      file.createNewFile();
+      file = new File("scraped-data.dat");
+      file.createNewFile();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     ImageIcon homeIcon = new ImageIcon(
         "/home/tales/Documents/bti/2022.1/LP2/final-LP2/fake-news-detector/images/home.png");

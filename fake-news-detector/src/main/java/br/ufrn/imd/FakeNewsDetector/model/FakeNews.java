@@ -2,9 +2,12 @@ package br.ufrn.imd.FakeNewsDetector.model;
 
 import java.util.*;
 import java.text.Normalizer;
+import java.io.*;
+import java.io.Serializable;
 
-public class FakeNews extends News implements ToString {
+public class FakeNews extends News implements ToString, Serializable {
   private String processedContent;
+  private static final long serialVersionUID = 1L;
 
   public String processContent(String content) {
     content = Normalizer.normalize(content, Normalizer.Form.NFD);

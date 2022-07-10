@@ -15,7 +15,7 @@ public class Comparator {
 
     double resultCosine = 0.0;
     double resultLeven = 0.0;
-    double resultJaro = 0.0;
+    //double resultJaro = 0.0;
     String scraped;
     String fake;
 
@@ -32,13 +32,13 @@ public class Comparator {
       resultLeven += (double)(1.0 - levenshteinDistance.apply(scraped, fake) /
         Math.max(scraped.length(), fake.length()));
 
-      resultJaro += 1.0 - jaroWinklerDistance.apply(scraped, fake);
+      //resultJaro += 1.0 - jaroWinklerDistance.apply(scraped, fake);
     }
 
     resultCosine = (double)resultCosine / allFakeNews.size();
     resultLeven = (double)resultLeven / allFakeNews.size();
-    resultJaro = (double)resultJaro / allFakeNews.size();
+    //resultJaro = (double)resultJaro / allFakeNews.size();
 
-    return (double)(resultJaro+resultLeven+resultCosine)/3;
+    return (double)(resultLeven+resultCosine)/2;
   }
 }
